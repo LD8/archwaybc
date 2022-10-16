@@ -1,5 +1,22 @@
 {
-  "function": {},
+  "function": {
+    "S3Trigger2f606387": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "airbc",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        }
+      ]
+    }
+  },
   "auth": {
     "airbc5fd3862b": {
       "service": "Cognito",
@@ -47,6 +64,23 @@
           ]
         }
       }
+    }
+  },
+  "storage": {
+    "airbcs3": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger2f606387",
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ]
+        }
+      ]
     }
   }
 }

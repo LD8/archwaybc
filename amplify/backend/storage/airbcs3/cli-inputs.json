@@ -1,0 +1,12 @@
+{
+  "resourceName": "airbcs3",
+  "policyUUID": "e15ec880",
+  "bucketName": "airbcs3",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "READ"
+  ],
+  "triggerFunction": "S3Trigger2f606387",
+  "groupAccess": {}
+}

@@ -14,6 +14,9 @@
     "categories": {
       "auth": {
         "airbc5fd3862b": {}
+      },
+      "function": {
+        "S3Trigger2f606387": {}
       }
     }
   }
