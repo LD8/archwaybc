@@ -22,7 +22,7 @@ export declare class Video {
 export declare class Image {
   readonly id: string;
   readonly itemKey: string;
-  readonly marked?: string | null;
+  readonly marked?: boolean | null;
   readonly category?: string | null;
   readonly box: (number | null)[];
   readonly createdAt?: string | null;

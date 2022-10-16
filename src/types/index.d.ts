@@ -14,3 +14,5 @@ type IPoint = [number, number]
 
 type IS3Item = S3ProviderListOutputItem
 type IS3Items = IS3Item[]
+
+type IMediaModelName = 'image' | 'video'

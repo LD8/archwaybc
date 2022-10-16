@@ -93,7 +93,7 @@ export const schema = {
                 "marked": {
                     "name": "marked",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -157,5 +157,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "aa829564458c4665953c3b5542056b79"
+    "version": "cdcd3b184e580d937ba0aaa5b60d0a44"
 };

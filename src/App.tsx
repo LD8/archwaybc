@@ -1,41 +1,84 @@
-import {
-  Button,
-  Heading,
-  TabItem,
-  Tabs,
-  View,
-  withAuthenticator,
-} from '@aws-amplify/ui-react'
+import { withAuthenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
+import {
+  Badge,
+  Button,
+  Container,
+  ContentLayout,
+  Header,
+  SpaceBetween,
+  Tabs,
+} from '@cloudscape-design/components'
 import '@cloudscape-design/global-styles/index.css'
-import React from 'react'
-import './App.css'
+import React, { useState } from 'react'
+import useDataStore from './hooks/useDataStore'
 import TabPane from './components/TabPane'
+import MainHeader from './components/MainHeader'
 
 const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
-  return (
-    <View className='App'>
-      <View
-        as='nav'
-        backgroundColor='1px solid var(--amplify-colors-white)'
-        boxShadow='3px 3px 5px 6px var(--amplify-colors-neutral-20)'
-        height='60px'
-      >
-        <Heading level={3} style={{ display: 'inline' }}>
-          ABC Airline
-        </Heading>
-        <Button onClick={signOut}>Sign Out</Button>
-      </View>
+  const [marked, setMarked] = useState(false)
+  const { images, videos, loading } = useDataStore(marked)
+  console.log({ images, videos })
 
-      <Tabs justifyContent='flex-start'>
-        <TabItem title='Image Table'>
-          <TabPane />
-        </TabItem>
-        <TabItem title='Video Table'>
-          <TabPane isVideo />
-        </TabItem>
-      </Tabs>
-    </View>
+  const tabs = [
+    {
+      label: (
+        <span>
+          Image Pane {images && <Badge color='blue'>{images.length}</Badge>}
+        </span>
+      ),
+      id: 'image',
+      content: <TabPane marked={marked} content={images} loading={loading} />,
+    },
+    {
+      label: (
+        <span>
+          Video Pane {videos && <Badge color='blue'>{videos.length}</Badge>}
+        </span>
+      ),
+      id: 'video',
+      content: (
+        <TabPane isVideo marked={marked} content={videos} loading={loading} />
+      ),
+    },
+  ]
+
+  return (
+    <ContentLayout header={<MainHeader signOut={signOut} />}>
+      <Container
+        header={
+          <Header
+            variant='h2'
+            description='Please select a marking category'
+            actions={
+              <SpaceBetween size='m' direction='horizontal'>
+                <Button
+                  loading={loading}
+                  onClick={() => setMarked(false)}
+                  variant={`${marked ? 'normal' : 'primary'}`}
+                >
+                  To Be Marked
+                </Button>
+                <Button
+                  loading={loading}
+                  onClick={() => setMarked(true)}
+                  variant={`${marked ? 'primary' : 'normal'}`}
+                >
+                  Already Marked
+                </Button>
+              </SpaceBetween>
+            }
+          >
+            Marking Categories
+          </Header>
+        }
+        footer={<MainHeader signOut={signOut} />}
+      >
+        <SpaceBetween size='l'>
+          <Tabs variant='container' tabs={tabs} />
+        </SpaceBetween>
+      </Container>
+    </ContentLayout>
   )
 }
 
