@@ -16,12 +16,6 @@ const useDataStore = (isMarked: boolean) => {
       })
       .catch(console.log)
       .finally(() => setLoading(false))
-    // DataStore.query(Image).then((models) => {
-    //   setImages(models)
-    // })
-    // DataStore.query(Video).then((models) => {
-    //   setVideos(models)
-    // })
   }, [isMarked])
   return { images, videos, loading }
 }

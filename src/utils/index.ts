@@ -19,10 +19,7 @@ export function initDraw(
       element = null
       targetCanvas.style.cursor = 'default'
       console.log('finsihed.', mouse)
-      onFinish({
-        pointStart: [mouse.startX, mouse.startY],
-        pointEnd: [mouse.x, mouse.y],
-      })
+      onFinish([mouse.startX, mouse.startY, mouse.x, mouse.y])
     } else {
       mouse.startX = mouse.x
       mouse.startY = mouse.y

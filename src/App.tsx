@@ -18,7 +18,10 @@ import MainHeader from './components/MainHeader'
 const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
   const [marked, setMarked] = useState(false)
   const { images, videos, loading } = useDataStore(marked)
-  console.log({ images, videos })
+  console.log({
+    images,
+    videos,
+  })
 
   const tabs = [
     {
@@ -46,6 +49,7 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
   return (
     <ContentLayout header={<MainHeader signOut={signOut} />}>
       <Container
+        footer={<MainHeader signOut={signOut} />}
         header={
           <Header
             variant='h2'
@@ -54,7 +58,6 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
             Marking Categories
           </Header>
         }
-        footer={<MainHeader signOut={signOut} />}
       >
         <SpaceBetween size='l'>
           <SpaceBetween size='m' direction='horizontal'>
