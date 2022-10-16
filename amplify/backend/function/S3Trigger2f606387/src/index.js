@@ -26,7 +26,7 @@ const queryVideo = /* GraphQL */ `
   }
 `
 
-const fetch = import('node-fetch');
+const fetch = import('node-fetch')
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
@@ -72,8 +72,5 @@ exports.handler = async (event) => {
     }
   }
 
-  return {
-    statusCode,
-    body: JSON.stringify(body),
-  }
+  return { statusCode, body: JSON.stringify(body) }
 }

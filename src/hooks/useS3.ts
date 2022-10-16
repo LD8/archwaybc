@@ -15,7 +15,8 @@ export const useGetS3List = <T extends Record<string, any>>({
 
   useEffect(() => {
     setLoading(true)
-    Storage.list<T>(path, config)
+    const proPath = path.replace(/^public\//, '')
+    Storage.list<T>(proPath, config)
       .then((res) => {
         const l = res.filter((r) => r.size)
         setList(l)

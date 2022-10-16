@@ -14,7 +14,7 @@ import { Image, Video } from '../models'
 import { regulateTime } from '../utils'
 import MarkingModal from './MarkingModal'
 
-type IMedia = Image | Video
+export type IMedia = Image | Video
 const DEFAULT_PAGE_SIZE = 10
 const DEFAULT_VISIBLE = ['itemKey', 'category', 'marked', 'updatedAt']
 
@@ -58,15 +58,15 @@ const TabPane: React.FC<{
     sorting: {},
     selection: {},
   })
-  const [itemKey, setItemKey] = useState<string>()
+  const [itemData, setItemData] = useState<IMedia>()
 
   return (
     <div style={{ marginTop: '0.5rem' }} className='table-container'>
       <MarkingModal
         isVideo={isVideo}
-        itemKey={itemKey}
-        visible={!!itemKey}
-        onDismiss={() => setItemKey(undefined)}
+        itemData={itemData}
+        visible={!!itemData}
+        onDismiss={() => setItemData(undefined)}
       />
       <Table<IMedia>
         {...collectionProps}
@@ -77,7 +77,7 @@ const TabPane: React.FC<{
         loadingText='Loading resources'
         visibleColumns={preferences.visibleContent}
         items={items}
-        onRowClick={({ detail: { item } }) => setItemKey(item.itemKey)}
+        onRowClick={({ detail: { item } }) => setItemData(item)}
         wrapLines={preferences.wrapLines}
         pagination={
           <Pagination
