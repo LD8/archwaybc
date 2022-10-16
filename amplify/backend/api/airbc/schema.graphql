@@ -1,0 +1,14 @@
+type Video @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  itemKey: String!
+  category: String
+  marked: Boolean
+}
+
+type Image @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  itemKey: String!
+  marked: String
+  category: String
+  box: [Int]!
+}
