@@ -18,7 +18,7 @@ const queryImage = /* GraphQL */ `
   }
 `
 const queryVideo = /* GraphQL */ `
-  mutation CREATE_VIDEO($input: CreateVideo!) {
+  mutation CREATE_VIDEO($input: CreateVideoInput!) {
     createVideo(input: $input) {
       id
       itemKey
@@ -26,10 +26,12 @@ const queryVideo = /* GraphQL */ `
   }
 `
 
+const fetch = import('node-fetch');
+
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
-export const handler = async (event) => {
+exports.handler = async (event) => {
   console.log('Received S3 event:', JSON.stringify(event, null, 2))
   const bucket = event.Records[0].s3.bucket.name
   const itemKey = event.Records[0].s3.object.key
@@ -49,14 +51,12 @@ export const handler = async (event) => {
     }),
   }
 
-  const request = new Request(GRAPHQL_ENDPOINT, options)
-
   let statusCode = 200
   let body
   let response
 
   try {
-    response = await fetch(request)
+    response = await fetch(GRAPHQL_ENDPOINT, options)
     body = await response.json()
     if (body.errors) statusCode = 400
   } catch (error) {
