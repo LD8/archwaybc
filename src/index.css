@@ -44,3 +44,7 @@ video {
 .heading {
   padding: 24px 28px;
 }
+
+.table-container td {
+  cursor: pointer;
+}

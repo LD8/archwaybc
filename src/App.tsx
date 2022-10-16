@@ -24,7 +24,7 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
     {
       label: (
         <span>
-          Image Pane {images && <Badge color='blue'>{images.length}</Badge>}
+          Image Table {images && <Badge color='blue'>{images.length}</Badge>}
         </span>
       ),
       id: 'image',
@@ -33,7 +33,7 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
     {
       label: (
         <span>
-          Video Pane {videos && <Badge color='blue'>{videos.length}</Badge>}
+          Video Table {videos && <Badge color='blue'>{videos.length}</Badge>}
         </span>
       ),
       id: 'video',
@@ -49,25 +49,25 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
         header={
           <Header
             variant='h2'
-            description='Please select a marking category'
-            actions={
-              <SpaceBetween size='m' direction='horizontal'>
-                <Button
-                  loading={loading}
-                  onClick={() => setMarked(false)}
-                  variant={`${marked ? 'normal' : 'primary'}`}
-                >
-                  To Be Marked
-                </Button>
-                <Button
-                  loading={loading}
-                  onClick={() => setMarked(true)}
-                  variant={`${marked ? 'primary' : 'normal'}`}
-                >
-                  Already Marked
-                </Button>
-              </SpaceBetween>
-            }
+            description='Please select a category, either "To Be Marked" (default) or "Already Marked"'
+            // actions={
+            //   <SpaceBetween size='m' direction='horizontal'>
+            //     <Button
+            //       loading={loading}
+            //       onClick={() => setMarked(false)}
+            //       variant={`${marked ? 'normal' : 'primary'}`}
+            //     >
+            //       To Be Marked
+            //     </Button>
+            //     <Button
+            //       loading={loading}
+            //       onClick={() => setMarked(true)}
+            //       variant={`${marked ? 'primary' : 'normal'}`}
+            //     >
+            //       Already Marked
+            //     </Button>
+            //   </SpaceBetween>
+            // }
           >
             Marking Categories
           </Header>
@@ -75,7 +75,23 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
         footer={<MainHeader signOut={signOut} />}
       >
         <SpaceBetween size='l'>
-          <Tabs variant='container' tabs={tabs} />
+          <SpaceBetween size='m' direction='horizontal'>
+            <Button
+              loading={loading}
+              onClick={() => setMarked(false)}
+              variant={`${marked ? 'normal' : 'primary'}`}
+            >
+              To Be Marked
+            </Button>
+            <Button
+              loading={loading}
+              onClick={() => setMarked(true)}
+              variant={`${marked ? 'primary' : 'normal'}`}
+            >
+              Already Marked
+            </Button>
+          </SpaceBetween>
+          <Tabs tabs={tabs} disableContentPaddings />
         </SpaceBetween>
       </Container>
     </ContentLayout>

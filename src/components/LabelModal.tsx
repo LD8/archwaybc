@@ -24,11 +24,11 @@ const LabelModal: React.FC<{
   visible: boolean
 }> = ({ itemKey, isVideo = false, onDismiss, visible }) => {
   const refDiv = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    itemKey &&
-      API.get('dbapis', `/videos`, {}).then(console.log)
-    // initDraw(refDiv.current!, (coord) => console.log(coord))
-  }, [itemKey])
+  // useEffect(() => {
+  //   itemKey &&
+  //     API.get('dbapis', `/videos`, {}).then(console.log)
+  //   // initDraw(refDiv.current!, (coord) => console.log(coord))
+  // }, [itemKey])
 
   if (!itemKey) return null
 

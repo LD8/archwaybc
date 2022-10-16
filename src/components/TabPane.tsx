@@ -12,10 +12,11 @@ import {
 } from '@cloudscape-design/components'
 import React, { useState } from 'react'
 import { Image, Video } from '../models'
+import { regulateTime } from '../utils'
 import LabelModal from './LabelModal'
 
 type IMedia = Image | Video
-const DEFAULT_PAGE_SIZE = 20
+const DEFAULT_PAGE_SIZE = 10
 const DEFAULT_VISIBLE = ['itemKey', 'category', 'marked', 'updatedAt']
 
 const TabPane: React.FC<{
@@ -62,31 +63,36 @@ const TabPane: React.FC<{
   const [itemKey, setItemKey] = useState<string>()
 
   return (
-    <>
+    <div style={{ marginTop: '0.5rem' }} className="table-container">
       <Table<IMedia>
         {...collectionProps}
-        header={
-          <Header
-            counter={
-              selectedItems?.length
-                ? `(${selectedItems.length}/${content.length})`
-                : `(${content.length})`
-            }
-          >
-            {marked ? (
-              <>
-                Total
-                <span style={{ padding: '0 10px' }}>{content.length}</span>
-                {isVideo ? 'videos' : 'images'} marked
-              </>
-            ) : (
-              <>
-                <span style={{ padding: '0 10px' }}>{content.length}</span>
-                {isVideo ? 'videos' : 'images'} to be marked
-              </>
-            )}
-          </Header>
-        }
+        stickyHeader
+        variant='embedded'
+        onRowClick={({ detail: { item } }) => {
+          setItemKey(item.itemKey)
+        }}
+        // header={
+        //   <Header
+        //     counter={
+        //       selectedItems?.length
+        //         ? `(${selectedItems.length}/${content.length})`
+        //         : `(${content.length})`
+        //     }
+        //   >
+        //     {marked ? (
+        //       <>
+        //         Total
+        //         <span style={{ padding: '0 10px' }}>{content.length}</span>
+        //         {isVideo ? 'videos' : 'images'} marked
+        //       </>
+        //     ) : (
+        //       <>
+        //         <span style={{ padding: '0 10px' }}>{content.length}</span>
+        //         {isVideo ? 'videos' : 'images'} to be marked
+        //       </>
+        //     )}
+        //   </Header>
+        // }
         selectionType='multi'
         loading={loading}
         loadingText='Loading resources'
@@ -115,13 +121,13 @@ const TabPane: React.FC<{
           {
             id: 'createdAt',
             header: 'Created At',
-            cell: (item) => `${item.createdAt}` || '-',
+            cell: (item) => regulateTime(item.createdAt),
             sortingField: 'createdAt',
           },
           {
             id: 'updatedAt',
             header: 'Updated At',
-            cell: (item) => `${item.updatedAt}` || '-',
+            cell: (item) => regulateTime(item.updatedAt),
             sortingField: 'updatedAt',
           },
         ]}
@@ -140,9 +146,9 @@ const TabPane: React.FC<{
         filter={
           <TextFilter
             {...filterProps}
-            filteringPlaceholder='Find instances'
+            filteringPlaceholder='Find instances looping through all fields'
             filteringAriaLabel='Filter instances'
-            countText={String(filteredItemsCount)}
+            countText={`Found ${filteredItemsCount} instance(s)`}
           />
         }
         wrapLines={preferences.wrapLines}
@@ -197,19 +203,6 @@ const TabPane: React.FC<{
             confirmLabel='Confirm'
             title='Preferences'
           />
-          //   title='Collection Preferences'
-          //   confirmLabel='Confirm'
-          //   cancelLabel='Cancel'
-          //   preferences={preferences}
-          //   onConfirm={({ detail }) =>
-          //     setPreferences({
-          //       pageSize: detail.pageSize || DEFAULT_PAGE_SIZE,
-          //       visibleContent:
-          //         (detail.visibleContent as any) || DEFAULT_VISIBLE,
-          //       ...detail,
-          //     })
-          //   }
-          // />
         }
       />
       <LabelModal
@@ -218,7 +211,7 @@ const TabPane: React.FC<{
         visible={!!itemKey}
         onDismiss={() => setItemKey(undefined)}
       />
-    </>
+    </div>
   )
 }
 

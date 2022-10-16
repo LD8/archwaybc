@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 // initDraw(document.getElementById('targetCanvas'))
 
 export function initDraw(
@@ -60,3 +62,6 @@ export function initDraw(
     }
   }
 }
+
+export const regulateTime = (time?: string | null) =>
+  !time ? '-' : moment(time).format('YYYY-MM-DD HH:mm:ss')
