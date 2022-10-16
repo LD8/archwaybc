@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-airbc-dev-110357-authRole",
+      "UnauthRoleArn": "arn:aws:iam::485847499674:role/amplify-airbc-dev-110357-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::485847499674:role/amplify-airbc-dev-110357-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-airbc-dev-110357-deployment",
+      "UnauthRoleName": "amplify-airbc-dev-110357-unauthRole",
+      "StackName": "amplify-airbc-dev-110357",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:485847499674:stack/amplify-airbc-dev-110357/303ae150-4cff-11ed-91e0-02dc3975b49a",
+      "AmplifyAppId": "d2ks5mut0hxyqr"
+    }
+  }
+}
