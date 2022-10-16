@@ -4,7 +4,6 @@ import {
   Button,
   CollectionPreferences,
   CollectionPreferencesProps,
-  Header,
   Pagination,
   StatusIndicator,
   Table,
@@ -13,7 +12,7 @@ import {
 import React, { useState } from 'react'
 import { Image, Video } from '../models'
 import { regulateTime } from '../utils'
-import LabelModal from './LabelModal'
+import MarkingModal from './MarkingModal'
 
 type IMedia = Image | Video
 const DEFAULT_PAGE_SIZE = 10
@@ -59,43 +58,45 @@ const TabPane: React.FC<{
     sorting: {},
     selection: {},
   })
-  const { selectedItems } = collectionProps
   const [itemKey, setItemKey] = useState<string>()
 
   return (
-    <div style={{ marginTop: '0.5rem' }} className="table-container">
+    <div style={{ marginTop: '0.5rem' }} className='table-container'>
+      <MarkingModal
+        isVideo={isVideo}
+        itemKey={itemKey}
+        visible={!!itemKey}
+        onDismiss={() => setItemKey(undefined)}
+      />
       <Table<IMedia>
         {...collectionProps}
         stickyHeader
         variant='embedded'
-        onRowClick={({ detail: { item } }) => {
-          setItemKey(item.itemKey)
-        }}
-        // header={
-        //   <Header
-        //     counter={
-        //       selectedItems?.length
-        //         ? `(${selectedItems.length}/${content.length})`
-        //         : `(${content.length})`
-        //     }
-        //   >
-        //     {marked ? (
-        //       <>
-        //         Total
-        //         <span style={{ padding: '0 10px' }}>{content.length}</span>
-        //         {isVideo ? 'videos' : 'images'} marked
-        //       </>
-        //     ) : (
-        //       <>
-        //         <span style={{ padding: '0 10px' }}>{content.length}</span>
-        //         {isVideo ? 'videos' : 'images'} to be marked
-        //       </>
-        //     )}
-        //   </Header>
-        // }
         selectionType='multi'
         loading={loading}
         loadingText='Loading resources'
+        visibleColumns={preferences.visibleContent}
+        items={items}
+        onRowClick={({ detail: { item } }) => setItemKey(item.itemKey)}
+        wrapLines={preferences.wrapLines}
+        pagination={
+          <Pagination
+            {...paginationProps}
+            ariaLabels={{
+              nextPageLabel: 'Next page',
+              previousPageLabel: 'Previous page',
+              pageLabel: (pageNumber) => `Page ${pageNumber} of all pages`,
+            }}
+          />
+        }
+        filter={
+          <TextFilter
+            {...filterProps}
+            filteringPlaceholder='Find instances looping through all fields'
+            filteringAriaLabel='Filter instances'
+            countText={`Found ${filteredItemsCount} instance(s)`}
+          />
+        }
         columnDefinitions={[
           {
             id: 'itemKey',
@@ -131,31 +132,17 @@ const TabPane: React.FC<{
             sortingField: 'updatedAt',
           },
         ]}
-        visibleColumns={preferences.visibleContent}
-        items={items}
-        pagination={
-          <Pagination
-            {...paginationProps}
-            ariaLabels={{
-              nextPageLabel: 'Next page',
-              previousPageLabel: 'Previous page',
-              pageLabel: (pageNumber) => `Page ${pageNumber} of all pages`,
-            }}
-          />
-        }
-        filter={
-          <TextFilter
-            {...filterProps}
-            filteringPlaceholder='Find instances looping through all fields'
-            filteringAriaLabel='Filter instances'
-            countText={`Found ${filteredItemsCount} instance(s)`}
-          />
-        }
-        wrapLines={preferences.wrapLines}
         preferences={
           <CollectionPreferences
+            title='Preferences'
+            cancelLabel='Cancel'
+            confirmLabel='Confirm'
             onConfirm={({ detail }) => setPreferences(detail)}
             preferences={preferences}
+            wrapLinesPreference={{
+              label: 'Wrap lines',
+              description: 'Wrap lines description',
+            }}
             pageSizePreference={{
               title: 'Select page size',
               options: [
@@ -166,10 +153,6 @@ const TabPane: React.FC<{
                 { value: 80, label: '80 resources' },
                 { value: 100, label: '100 resources' },
               ],
-            }}
-            wrapLinesPreference={{
-              label: 'Wrap lines',
-              description: 'Wrap lines description',
             }}
             visibleContentPreference={{
               title: 'Select visible content',
@@ -199,17 +182,8 @@ const TabPane: React.FC<{
                 },
               ],
             }}
-            cancelLabel='Cancel'
-            confirmLabel='Confirm'
-            title='Preferences'
           />
         }
-      />
-      <LabelModal
-        isVideo={isVideo}
-        itemKey={itemKey}
-        visible={!!itemKey}
-        onDismiss={() => setItemKey(undefined)}
       />
     </div>
   )

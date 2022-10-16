@@ -7,6 +7,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between'
 import React, { useEffect, useRef } from 'react'
 import S3Video from './S3Video'
 import { API } from 'aws-amplify'
+
 // preferably api fetched ↓
 const categories = [
   'Category Lorem',

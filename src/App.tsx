@@ -50,24 +50,6 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
           <Header
             variant='h2'
             description='Please select a category, either "To Be Marked" (default) or "Already Marked"'
-            // actions={
-            //   <SpaceBetween size='m' direction='horizontal'>
-            //     <Button
-            //       loading={loading}
-            //       onClick={() => setMarked(false)}
-            //       variant={`${marked ? 'normal' : 'primary'}`}
-            //     >
-            //       To Be Marked
-            //     </Button>
-            //     <Button
-            //       loading={loading}
-            //       onClick={() => setMarked(true)}
-            //       variant={`${marked ? 'primary' : 'normal'}`}
-            //     >
-            //       Already Marked
-            //     </Button>
-            //   </SpaceBetween>
-            // }
           >
             Marking Categories
           </Header>
