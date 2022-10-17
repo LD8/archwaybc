@@ -66,7 +66,7 @@ export function initDraw(
 export const regulateTime = (time?: string | null) =>
   !time ? '-' : moment(time).format('YYYY-MM-DD HH:mm:ss')
 
-export const mouseToCoord = (mouse: typeof MOUSE_INIT) => {
+export const mouseToCoord = (mouse: ReturnType<typeof MOUSE_INIT>) => {
   return [mouse.startX, mouse.startY, mouse.endX, mouse.endY]
 }
 

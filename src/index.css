@@ -47,7 +47,7 @@ video {
 }
 
 .div-marking {
-  max-width: 1100px;
+  max-width: 1450px;
   margin: 0 auto;
   display: flex;
   flex-flow: row wrap;
@@ -65,10 +65,15 @@ video {
   height: 500px;
 }
 .div-marking > .div-marking-inputs {
-  flex: 1;
+  flex: 1 0 200px;
   display: flex;
   flex-flow: column;
   gap: 1rem;
+}
+.div-marking > .div-marking-helps {
+  flex: 1 0 250px;
+  border-left: 2px solid silver;
+  padding-left: 24px
 }
 .div-marking .div-marking-inputs .div-marking-inputs-div {
   width: 100%;
@@ -76,7 +81,8 @@ video {
   flex-flow: column;
   gap: 0.5rem;
 }
-/* h3 {
+h3,
+h4 {
   margin: 0;
-  margin-bottom: 12px;
-} */
+  margin-bottom: 8px;
+}

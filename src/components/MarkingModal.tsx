@@ -3,6 +3,8 @@ import {
   Box,
   Button,
   FormField,
+  Icon,
+  Link,
   Modal,
   Select,
   SelectProps,
@@ -23,12 +25,14 @@ const catOptions = [
   'Category adipisicing',
   'Category elit',
 ].map((v) => ({ label: v, value: v }))
-export const MOUSE_INIT = {
+
+export const MOUSE_INIT = () => ({
   endX: 0,
   endY: 0,
   startX: 0,
   startY: 0,
-}
+})
+
 const MarkingModal: React.FC<{
   isVideo?: boolean
   onDismiss: () => void
@@ -40,15 +44,23 @@ const MarkingModal: React.FC<{
   const refMouse = useRef(
     !isVideo && (itemData as Image)?.box?.length === 4
       ? coordToMouse((itemData as Image).box as IBox)
-      : MOUSE_INIT,
+      : MOUSE_INIT(),
   )
   const [selectedOption, setSelectedOption] = useState<SelectProps.Option>()
   const [drawStart, setDrawStart] = useState(false)
+  // console.log({
+  //   refMouse: refMouse.current,
+  //   itemData,
+  //   drawStart,
+  //   refBoxDiv: refBoxDiv.current,
+  // })
 
   const handleDismiss = useCallback(() => {
     onDismiss()
     setSelectedOption(undefined)
     setDrawStart(false)
+    refBoxDiv.current = undefined
+    refMouse.current = MOUSE_INIT()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -75,16 +87,16 @@ const MarkingModal: React.FC<{
         refMouse.current.endX = offsetX
         refMouse.current.endY = offsetY
         if (refBoxDiv.current) {
-          refBoxDiv.current.style.width =
-            Math.abs(refMouse.current.endX - refMouse.current.startX) + 'px'
-          refBoxDiv.current.style.height =
-            Math.abs(refMouse.current.endY - refMouse.current.startY) + 'px'
+          const xShift = refMouse.current.endX - refMouse.current.startX
+          const yShift = refMouse.current.endY - refMouse.current.startY
+          refBoxDiv.current.style.width = Math.abs(xShift) + 'px'
+          refBoxDiv.current.style.height = Math.abs(yShift) + 'px'
           refBoxDiv.current.style.left =
-            refMouse.current.endX - refMouse.current.startX < 0
+            xShift < 0
               ? refMouse.current.endX + 'px'
               : refMouse.current.startX + 'px'
           refBoxDiv.current.style.top =
-            refMouse.current.endY - refMouse.current.startY < 0
+            yShift < 0
               ? refMouse.current.endY + 'px'
               : refMouse.current.startY + 'px'
         }
@@ -94,9 +106,9 @@ const MarkingModal: React.FC<{
         const chd = targetDiv.firstChild
         if (chd) {
           targetDiv.removeChild(chd)
-          refBoxDiv.current = undefined
-          refMouse.current = MOUSE_INIT
         }
+        refBoxDiv.current = undefined
+        refMouse.current = MOUSE_INIT()
         targetDiv.addEventListener('click', handleClick)
         targetDiv.addEventListener('mousemove', handleMove)
       } else {
@@ -114,7 +126,7 @@ const MarkingModal: React.FC<{
   const { itemKey } = itemData
   return (
     <Modal
-      header={`Label image: ${itemKey}`}
+      header={`Marking image: ${itemKey}`}
       onDismiss={handleDismiss}
       visible={visible}
       closeAriaLabel='Close modal'
@@ -164,7 +176,7 @@ const MarkingModal: React.FC<{
           </FormField>
           {!isVideo && (
             <FormField
-              description='Please select from the options'
+              description='Please draw a bounding box to the image'
               label='Image Bounding Box'
             >
               <div className='div-marking-inputs-div'>
@@ -179,9 +191,53 @@ const MarkingModal: React.FC<{
             </FormField>
           )}
         </div>
+        <div className='div-marking-helps'>
+          <Helps />
+        </div>
       </div>
     </Modal>
   )
 }
 
 export default MarkingModal
+
+function Helps() {
+  return (
+    <div>
+      <h3>Help panel</h3>
+      <p>
+        This is a paragraph with some help information regarding the marking
+        system.
+      </p>
+      <h3>Bounding box rules</h3>
+      <dl>
+        <dt>
+          <em>One box can be drawn</em>
+        </dt>
+        <dd>If needed, more boxes can be drawn once properly configured</dd>
+        <dt>
+          <em>Redraw is allowed</em>
+        </dt>
+        <dd>
+          Before submission, you can draw multiple times by clicking the Draw
+          button
+        </dd>
+        <dt>
+          <em>Other rules</em>
+        </dt>
+        <dd>Lorem ipsum, dolor sit amet sectetur adipisicing elit</dd>
+      </dl>
+      <div>
+        <h3>
+          Learn more <Icon name='external' />
+        </h3>
+        <div>
+          <Link href=''>Documentation</Link>
+        </div>
+        <div>
+          <Link href=''>Customer service</Link>
+        </div>
+      </div>
+    </div>
+  )
+}
