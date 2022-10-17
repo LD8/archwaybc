@@ -10,7 +10,7 @@ import {
   SelectProps,
   SpaceBetween,
 } from '@cloudscape-design/components'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useInstanceUpdate } from '../hooks/useDataStore'
 import { Image, Video } from '../models'
@@ -28,12 +28,15 @@ const catOptions = [
   'Category elit',
 ].map((v) => ({ label: v, value: v }))
 
-export const MOUSE_INIT = () => ({
-  endX: 0,
-  endY: 0,
-  startX: 0,
-  startY: 0,
-})
+export const MOUSE_INIT = () => ({ endX: 0, endY: 0, startX: 0, startY: 0 })
+const REC_STYLE_INIT = {
+  width: 'unset',
+  height: 'unset',
+  left: 'unset',
+  top: 'unset',
+  display: 'none',
+}
+let clickInitiated = false
 
 const MarkingModal: React.FC<{
   isVideo?: boolean
@@ -42,128 +45,123 @@ const MarkingModal: React.FC<{
   itemData?: IMedia
 }> = ({ isVideo = false, onDismiss, visible, itemData }) => {
   const refSrcDiv = useRef<HTMLDivElement>(null)
-  const refBoxDiv = useRef<HTMLDivElement>()
-  const imageBoxDefined = !isVideo && (itemData as Image)?.box?.length === 4
+  const refBoxDiv = useRef<HTMLDivElement>(null)
+  const [boxStyle, setBoxStyle] = useState<React.CSSProperties>(REC_STYLE_INIT)
+  const imageBoxDefined = useMemo(
+    () => !isVideo && (itemData as Image)?.box?.length === 4,
+    [isVideo, itemData],
+  )
   const refMouse = useRef(
     imageBoxDefined
       ? coordToMouse((itemData as Image).box as IBox)
       : MOUSE_INIT(),
   )
+
+  useEffect(() => {
+    if (imageBoxDefined) {
+      // image box already defined -> draw a boxDiv
+      const { startX, startY, endX, endY } = coordToMouse(
+        (itemData as Image).box as IBox,
+      )
+      const xShift = endX - startX
+      const yShift = endY - startY
+      setBoxStyle({
+        width: `${Math.abs(xShift)}px`,
+        height: `${Math.abs(yShift)}px`,
+        left: xShift < 0 ? `${endX}px` : `${startX}px`,
+        top: yShift < 0 ? `${endY}px` : `${startY}px`,
+        display: 'block',
+      })
+      return () => setBoxStyle(REC_STYLE_INIT)
+    }
+  }, [imageBoxDefined, itemData])
+
+  const [drawStart, setDrawStart] = useState(false)
+  useEffect(() => {
+    const targetDiv = refSrcDiv.current
+    if (targetDiv) {
+      const handleClick = ({ offsetX, offsetY }: MouseEvent) => {
+        if (!drawStart) return
+        if (!clickInitiated) {
+          // first click to start drawing
+          refMouse.current.startX = offsetX
+          refMouse.current.startY = offsetY
+          console.log({ begun: mouseToCoord(refMouse.current) })
+          setBoxStyle({
+            width: 0,
+            height: 0,
+            left: `${refMouse.current.startX}px`,
+            top: `${refMouse.current.startY}px`,
+            display: 'block',
+          })
+          clickInitiated = true
+        } else {
+          // second click to finish drawing
+          targetDiv.style.cursor = 'default'
+          console.log({ finished: mouseToCoord(refMouse.current) })
+          setDrawStart(false)
+          clickInitiated = false
+        }
+      }
+      const handleMove = ({ offsetX, offsetY }: MouseEvent) => {
+        if (!drawStart) return
+        const mouse = refMouse.current
+        mouse.endX = offsetX
+        mouse.endY = offsetY
+        if (clickInitiated) {
+          const xShift = mouse.endX - mouse.startX
+          const yShift = mouse.endY - mouse.startY
+          setBoxStyle({
+            width: `${Math.abs(xShift)}px`,
+            height: `${Math.abs(yShift)}px`,
+            left: xShift < 0 ? `${mouse.endX}px` : `${mouse.startX}px`,
+            top: yShift < 0 ? `${mouse.endY}px` : `${mouse.startY}px`,
+          })
+        }
+      }
+
+      const removeTargetListeners = () => {
+        targetDiv.style.cursor = 'default'
+        targetDiv.removeEventListener('click', handleClick)
+        targetDiv.removeEventListener('mousemove', handleMove)
+      }
+      if (drawStart) {
+        targetDiv.style.cursor = 'crosshair'
+        setBoxStyle(REC_STYLE_INIT)
+        refMouse.current = MOUSE_INIT()
+        targetDiv.addEventListener('click', handleClick)
+        targetDiv.addEventListener('mousemove', handleMove)
+        return removeTargetListeners
+      } else {
+        removeTargetListeners()
+      }
+    }
+  }, [drawStart])
+
+  const { updating, updateInstance } = useInstanceUpdate(isVideo)
   const [selectedOption, setSelectedOption] = useState<SelectProps.Option>()
   useEffect(() => {
     if (itemData?.category) {
       setSelectedOption({ label: itemData.category, value: itemData.category })
     }
   }, [itemData?.category])
-
-  const [recStyle, setRecStyle] = useState({
-    width: 0,
-    height: 0,
-    left: 0,
-    top: 0,
-  })
-  useEffect(() => {
-    if (!isVideo && (itemData as Image)?.box?.length === 4) {
-      // image box already defined -> draw a boxDiv
-      const boxDiv = document.createElement('div')
-      const { startX, startY, endX, endY } = coordToMouse(
-        (itemData as Image).box as IBox,
-      )
-      refBoxDiv.current = boxDiv
-      boxDiv.className = 'rectangle'
-      const xShift = startX - endX
-      const yShift = startY - startY
-      boxDiv.style.width = `${Math.abs(xShift)}px`
-      boxDiv.style.height = `${Math.abs(yShift)}px`
-      boxDiv.style.left = xShift < 0 ? `${endX}px` : `${startX}px`
-      boxDiv.style.top = yShift < 0 ? `${endY}px` : `${startY}px`
-      refSrcDiv.current?.appendChild(boxDiv)
-      // return () => {
-      //   boxDiv.remove()
-      //   refBoxDiv.current = undefined
-      // }
-    }
-  }, [isVideo, itemData])
-
-  const [drawStart, setDrawStart] = useState(false)
-  console.log({
-    refMouse: refMouse.current,
-    itemData,
-    drawStart,
-    refBoxDiv: refBoxDiv.current,
-  })
-  const { updating, updateInstance } = useInstanceUpdate(isVideo)
-
   const handleDismiss = useCallback(() => {
     onDismiss()
     setSelectedOption(undefined)
     setDrawStart(false)
-    refBoxDiv.current = undefined
     refMouse.current = MOUSE_INIT()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    const targetDiv = refSrcDiv.current
-    if (targetDiv) {
-      const handleClick = ({ offsetX, offsetY }: MouseEvent) => {
-        if (refBoxDiv.current) {
-          targetDiv.style.cursor = 'default'
-          console.log({ finished: mouseToCoord(refMouse.current) })
-          setDrawStart(false)
-        } else {
-          refMouse.current.startX = offsetX
-          refMouse.current.startY = offsetY
-          console.log({ begun: mouseToCoord(refMouse.current) })
-          refBoxDiv.current = document.createElement('div')
-          refBoxDiv.current.className = 'rectangle'
-          refBoxDiv.current.style.left = `${refMouse.current.startX}px`
-          refBoxDiv.current.style.top = `${refMouse.current.startY}px`
-          targetDiv.appendChild(refBoxDiv.current)
-        }
-      }
-      const handleMove = ({ offsetX, offsetY }: MouseEvent) => {
-        refMouse.current.endX = offsetX
-        refMouse.current.endY = offsetY
-        if (refBoxDiv.current) {
-          const xShift = refMouse.current.endX - refMouse.current.startX
-          const yShift = refMouse.current.endY - refMouse.current.startY
-          refBoxDiv.current.style.width = Math.abs(xShift) + 'px'
-          refBoxDiv.current.style.height = Math.abs(yShift) + 'px'
-          refBoxDiv.current.style.left =
-            xShift < 0
-              ? refMouse.current.endX + 'px'
-              : refMouse.current.startX + 'px'
-          refBoxDiv.current.style.top =
-            yShift < 0
-              ? refMouse.current.endY + 'px'
-              : refMouse.current.startY + 'px'
-        }
-      }
-      if (drawStart) {
-        targetDiv.style.cursor = 'crosshair'
-        const chd = targetDiv.firstChild
-        if (chd) {
-          targetDiv.removeChild(chd)
-        }
-        refBoxDiv.current = undefined
-        refMouse.current = MOUSE_INIT()
-        targetDiv.addEventListener('click', handleClick)
-        targetDiv.addEventListener('mousemove', handleMove)
-      } else {
-        targetDiv.removeEventListener('click', handleClick)
-        targetDiv.removeEventListener('mousemove', handleMove)
-      }
-      return () => {
-        targetDiv.style.cursor = 'default'
-        targetDiv.removeEventListener('click', handleClick)
-        targetDiv.removeEventListener('mousemove', handleMove)
-      }
-    }
-  }, [drawStart])
-
   if (!itemData) return null
   const { itemKey } = itemData
+  // console.log({
+  //   refMouse: refMouse.current,
+  //   itemData,
+  //   drawStart,
+  //   refBoxDiv: refBoxDiv.current,
+  //   boxStyle,
+  // })
   return (
     <Modal
       header={`Marking image: ${itemKey}`}
@@ -214,7 +212,7 @@ const MarkingModal: React.FC<{
     >
       <div className='div-marking'>
         <div ref={refSrcDiv} className='div-marking-src-before'>
-          <div className='rectangle' style={recStyle} />
+          <div ref={refBoxDiv} className='rectangle' style={boxStyle} />
         </div>
         <div className='div-marking-src'>
           {isVideo ? (
