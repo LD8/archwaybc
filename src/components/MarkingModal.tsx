@@ -117,6 +117,7 @@ const MarkingModal: React.FC<{
             height: `${Math.abs(yShift)}px`,
             left: xShift < 0 ? `${mouse.endX}px` : `${mouse.startX}px`,
             top: yShift < 0 ? `${mouse.endY}px` : `${mouse.startY}px`,
+            display: 'block',
           })
         }
       }
