@@ -1,4 +1,5 @@
-import { withAuthenticator } from '@aws-amplify/ui-react'
+import { AmplifyUser } from '@aws-amplify/ui'
+import { UseAuthenticator } from '@aws-amplify/ui-react-core'
 import '@aws-amplify/ui-react/styles.css'
 import {
   Badge,
@@ -11,12 +12,15 @@ import {
 } from '@cloudscape-design/components'
 import '@cloudscape-design/global-styles/index.css'
 import React, { useState } from 'react'
-import useDataStore from './hooks/useDataStore'
-import TabPane from './components/TabPane'
-import MainHeader from './components/MainHeader'
 import { Toaster } from 'react-hot-toast'
+import MainHeader from './components/MainHeader'
+import TabPane from './components/TabPane'
+import useDataStore from './hooks/useDataStore'
 
-const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
+const App: React.FC<{
+  signOut?: UseAuthenticator['signOut']
+  user?: AmplifyUser
+}> = ({ signOut }) => {
   const [marked, setMarked] = useState(false)
   const {
     images,
@@ -66,8 +70,12 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
   ]
 
   return (
-    <ContentLayout header={<MainHeader signOut={signOut} />}>
+    <ContentLayout
+      header={<MainHeader signOut={signOut} />}
+      data-content-layout
+    >
       <Container
+      data-main-div
         footer={<MainHeader signOut={signOut} />}
         header={
           <Header
@@ -80,24 +88,22 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
       >
         <SpaceBetween size='l'>
           <SpaceBetween size='m' direction='horizontal'>
-            <div className='btn-mark-switch'>
-              <Button
-                loading={loadingImages || loadingVideos}
-                onClick={() => setMarked(false)}
-                variant={`${marked ? 'normal' : 'primary'}`}
-              >
-                To Be Marked
-              </Button>
-            </div>
-            <div className='btn-mark-switch'>
-              <Button
-                loading={loadingImages || loadingVideos}
-                onClick={() => setMarked(true)}
-                variant={`${marked ? 'primary' : 'normal'}`}
-              >
-                Already Marked
-              </Button>
-            </div>
+            <Button
+              data-btn-mark-switch
+              // loading={loadingImages || loadingVideos}
+              onClick={() => setMarked(false)}
+              variant={`${marked ? 'normal' : 'primary'}`}
+            >
+              To Be Marked
+            </Button>
+            <Button
+              data-btn-mark-switch
+              // loading={loadingImages || loadingVideos}
+              onClick={() => setMarked(true)}
+              variant={`${marked ? 'primary' : 'normal'}`}
+            >
+              Already Marked
+            </Button>
           </SpaceBetween>
           <Tabs tabs={tabs} disableContentPaddings />
         </SpaceBetween>
@@ -111,4 +117,4 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
   )
 }
 
-export default withAuthenticator(App)
+export default App

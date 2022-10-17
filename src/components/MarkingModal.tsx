@@ -171,6 +171,7 @@ const MarkingModal: React.FC<{
       visible={visible}
       closeAriaLabel='Close modal'
       size='max'
+      data-marking-modal
       footer={
         <Box float='right'>
           <SpaceBetween direction='horizontal' size='xs'>

@@ -13,6 +13,22 @@ body {
   font-family: 'MuseoModerno', cursive;
 }
 
+[data-amplify-authenticator] {
+  /* --amplify-colors-background-primary: var(--amplify-colors-neutral-90);
+  --amplify-colors-background-secondary: var(--amplify-colors-neutral-100);
+  --amplify-colors-brand-primary-10: var(--amplify-colors-teal-100);
+  --amplify-colors-brand-primary-80: var(--amplify-colors-teal-40);
+  --amplify-colors-brand-primary-90: var(--amplify-colors-teal-20);
+  --amplify-colors-brand-primary-100: var(--amplify-colors-teal-10);
+  --amplify-colors-font-interactive: var(--amplify-colors-white);
+  --amplify-components-tabs-item-active-color: var(--amplify-colors-white);
+  --amplify-components-tabs-item-focus-color: var(--amplify-colors-white);
+  --amplify-components-tabs-item-hover-color: var(--amplify-colors-orange); */
+  height: 100vh;
+}
+[data-content-layout] {
+  height: 100vh;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -38,18 +54,26 @@ video {
   width: 800px;
 }
 
+[data-main-div] {
+  height: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+[data-marking-modal] > [data-focus-lock-disabled] > div {
+  max-width: 1600px;
+}
+
 .heading {
   padding: 24px 28px;
 }
 
-.btn-mark-switch button {
+[data-btn-mark-switch] {
   width: 200px;
   text-align: center !important;
 }
 .table-container td {
   cursor: pointer;
 }
-
 .div-marking {
   max-width: 1450px;
   margin: 0 auto;
