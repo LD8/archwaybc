@@ -9,20 +9,11 @@ const useDataStore = (isMarked: boolean) => {
   const [loadingImages, setLoadingImages] = useState(false)
   const [loadingVideos, setLoadingVideos] = useState(false)
 
-  useEffect(() => {
-    Promise.all([DataStore.query(Image), DataStore.query(Video)]).then(
-      ([imgs, vids]) => {
-        setImages(imgs.filter(({ marked }) => marked === isMarked))
-        setVideos(vids.filter(({ marked }) => marked === isMarked))
-      },
-    )
-  }, [isMarked])
-
   const refreshImages = useCallback(() => {
     setLoadingImages(true)
     DataStore.query(Image)
       .then((imgs) =>
-        setImages(imgs.filter(({ marked }) => marked === isMarked)),
+        setImages(imgs.filter(({ marked }) => !!marked === isMarked)),
       )
       .catch(console.log)
       .finally(() => setLoadingImages(false))
@@ -30,12 +21,18 @@ const useDataStore = (isMarked: boolean) => {
 
   const refreshVideos = useCallback(() => {
     setLoadingVideos(true)
-    DataStore.query(Image)
-      .then((imgs) =>
-        setImages(imgs.filter(({ marked }) => marked === isMarked)),
+    DataStore.query(Video)
+      .then((vids) =>
+        setVideos(vids.filter(({ marked }) => !!marked === isMarked)),
       )
       .catch(console.log)
       .finally(() => setLoadingVideos(false))
+  }, [isMarked])
+
+  useEffect(() => {
+    refreshImages()
+    refreshVideos()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMarked])
 
   return {

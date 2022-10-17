@@ -26,19 +26,17 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
     refreshImages,
     refreshVideos,
   } = useDataStore(marked)
-  console.log({
-    images,
-    videos,
-  })
+
+  console.log({ images, videos })
 
   const tabs = [
     {
+      id: 'image',
       label: (
         <span>
           Image Table {images && <Badge color='blue'>{images.length}</Badge>}
         </span>
       ),
-      id: 'image',
       content: (
         <TabPane
           marked={marked}
@@ -49,12 +47,12 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
       ),
     },
     {
+      id: 'video',
       label: (
         <span>
           Video Table {videos && <Badge color='blue'>{videos.length}</Badge>}
         </span>
       ),
-      id: 'video',
       content: (
         <TabPane
           isVideo
@@ -82,20 +80,24 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
       >
         <SpaceBetween size='l'>
           <SpaceBetween size='m' direction='horizontal'>
-            <Button
-              loading={loadingImages || loadingVideos}
-              onClick={() => setMarked(false)}
-              variant={`${marked ? 'normal' : 'primary'}`}
-            >
-              To Be Marked
-            </Button>
-            <Button
-              loading={loadingImages || loadingVideos}
-              onClick={() => setMarked(true)}
-              variant={`${marked ? 'primary' : 'normal'}`}
-            >
-              Already Marked
-            </Button>
+            <div className='btn-mark-switch'>
+              <Button
+                loading={loadingImages || loadingVideos}
+                onClick={() => setMarked(false)}
+                variant={`${marked ? 'normal' : 'primary'}`}
+              >
+                To Be Marked
+              </Button>
+            </div>
+            <div className='btn-mark-switch'>
+              <Button
+                loading={loadingImages || loadingVideos}
+                onClick={() => setMarked(true)}
+                variant={`${marked ? 'primary' : 'normal'}`}
+              >
+                Already Marked
+              </Button>
+            </div>
           </SpaceBetween>
           <Tabs tabs={tabs} disableContentPaddings />
         </SpaceBetween>

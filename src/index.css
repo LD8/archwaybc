@@ -42,6 +42,10 @@ video {
   padding: 24px 28px;
 }
 
+.btn-mark-switch button {
+  width: 200px;
+  text-align: center !important;
+}
 .table-container td {
   cursor: pointer;
 }
