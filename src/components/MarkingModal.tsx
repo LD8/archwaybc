@@ -226,6 +226,9 @@ const MarkingModal: React.FC<{
             <AmplifyS3Image imgKey={itemKey.replace(/^public\//, '')} />
           )}
         </div>
+        <div className='div-marking-src-after font-fancy'>
+          Loading {isVideo ? 'Video' : 'Image'}...
+        </div>
 
         <div className='div-marking-inputs'>
           <FormField

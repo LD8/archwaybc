@@ -54,15 +54,33 @@ video {
   gap: 2rem;
   position: relative;
 }
-.div-marking > .div-marking-src {
-  width: 800px;
-  height: 500px;
-  flex: 0 0 800px;
-}
 .div-marking > .div-marking-src-before {
   position: absolute;
   width: 800px;
   height: 500px;
+  z-index: 2;
+}
+.div-marking > .div-marking-src {
+  width: 800px;
+  height: 500px;
+  flex: 0 0 800px;
+  z-index: 1;
+}
+.div-marking > .div-marking-src-after {
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  text-align: center;
+  font-size: 40px;
+  line-height: 400px;
+  color: rgb(237, 241, 245);
+  z-index: 0;
+  opacity: 0.5;
+  background-color: rgb(167, 179, 187);
+  border-top: 30px solid rgb(204, 211, 217);
+  border-right: 30px solid rgb(156, 164, 172);
+  border-bottom: 30px solid rgb(142, 151, 157);
+  border-left: 30px solid rgb(188, 195, 204);
 }
 .div-marking > .div-marking-inputs {
   flex: 1 0 200px;
