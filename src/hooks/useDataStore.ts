@@ -6,19 +6,46 @@ import { Image, Video } from '../models'
 const useDataStore = (isMarked: boolean) => {
   const [images, setImages] = useState<any>()
   const [videos, setVideos] = useState<any>()
-  const [loading, setLoading] = useState(false)
+  const [loadingImages, setLoadingImages] = useState(false)
+  const [loadingVideos, setLoadingVideos] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    Promise.all([DataStore.query(Image), DataStore.query(Video)])
-      .then(([imgs, vids]) => {
+    Promise.all([DataStore.query(Image), DataStore.query(Video)]).then(
+      ([imgs, vids]) => {
         setImages(imgs.filter(({ marked }) => marked === isMarked))
         setVideos(vids.filter(({ marked }) => marked === isMarked))
-      })
-      .catch(console.log)
-      .finally(() => setLoading(false))
+      },
+    )
   }, [isMarked])
-  return { images, videos, loading }
+
+  const refreshImages = useCallback(() => {
+    setLoadingImages(true)
+    DataStore.query(Image)
+      .then((imgs) =>
+        setImages(imgs.filter(({ marked }) => marked === isMarked)),
+      )
+      .catch(console.log)
+      .finally(() => setLoadingImages(false))
+  }, [isMarked])
+
+  const refreshVideos = useCallback(() => {
+    setLoadingVideos(true)
+    DataStore.query(Image)
+      .then((imgs) =>
+        setImages(imgs.filter(({ marked }) => marked === isMarked)),
+      )
+      .catch(console.log)
+      .finally(() => setLoadingVideos(false))
+  }, [isMarked])
+
+  return {
+    images,
+    videos,
+    loadingImages,
+    loadingVideos,
+    refreshImages,
+    refreshVideos,
+  }
 }
 
 export default useDataStore

@@ -22,8 +22,9 @@ const TabPane: React.FC<{
   loading: boolean
   isVideo?: boolean
   marked?: boolean
+  refresh: () => void
   content?: IMedia[]
-}> = ({ isVideo = false, marked = false, loading, content = [] }) => {
+}> = ({ isVideo = false, marked = false, loading, content = [], refresh }) => {
   const [preferences, setPreferences] =
     useState<CollectionPreferencesProps.Preferences>({
       pageSize: DEFAULT_PAGE_SIZE,
@@ -67,6 +68,7 @@ const TabPane: React.FC<{
         itemData={itemData}
         visible={!!itemData}
         onDismiss={() => setItemData(undefined)}
+        refresh={refresh}
       />
       <Table<IMedia>
         {...collectionProps}

@@ -43,7 +43,8 @@ const MarkingModal: React.FC<{
   onDismiss: () => void
   visible: boolean
   itemData?: IMedia
-}> = ({ isVideo = false, onDismiss, visible, itemData }) => {
+  refresh: () => void
+}> = ({ isVideo = false, onDismiss, visible, itemData ,refresh}) => {
   const refSrcDiv = useRef<HTMLDivElement>(null)
   const refBoxDiv = useRef<HTMLDivElement>(null)
   const [boxStyle, setBoxStyle] = useState<React.CSSProperties>(REC_STYLE_INIT)
@@ -201,6 +202,7 @@ const MarkingModal: React.FC<{
                     box: mouseToCoord(refMouse.current),
                   })
                 }
+                refresh()
                 handleDismiss()
               }}
             >

@@ -18,7 +18,14 @@ import { Toaster } from 'react-hot-toast'
 
 const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
   const [marked, setMarked] = useState(false)
-  const { images, videos, loading } = useDataStore(marked)
+  const {
+    images,
+    videos,
+    loadingImages,
+    loadingVideos,
+    refreshImages,
+    refreshVideos,
+  } = useDataStore(marked)
   console.log({
     images,
     videos,
@@ -32,7 +39,14 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
         </span>
       ),
       id: 'image',
-      content: <TabPane marked={marked} content={images} loading={loading} />,
+      content: (
+        <TabPane
+          marked={marked}
+          content={images}
+          loading={loadingImages}
+          refresh={refreshImages}
+        />
+      ),
     },
     {
       label: (
@@ -42,7 +56,13 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
       ),
       id: 'video',
       content: (
-        <TabPane isVideo marked={marked} content={videos} loading={loading} />
+        <TabPane
+          isVideo
+          marked={marked}
+          content={videos}
+          loading={loadingVideos}
+          refresh={refreshVideos}
+        />
       ),
     },
   ]
@@ -63,14 +83,14 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
         <SpaceBetween size='l'>
           <SpaceBetween size='m' direction='horizontal'>
             <Button
-              loading={loading}
+              loading={loadingImages || loadingVideos}
               onClick={() => setMarked(false)}
               variant={`${marked ? 'normal' : 'primary'}`}
             >
               To Be Marked
             </Button>
             <Button
-              loading={loading}
+              loading={loadingImages || loadingVideos}
               onClick={() => setMarked(true)}
               variant={`${marked ? 'primary' : 'normal'}`}
             >
