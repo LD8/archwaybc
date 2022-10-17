@@ -1,4 +1,5 @@
-import { Authenticator, Image, View } from '@aws-amplify/ui-react'
+import { Authenticator, View } from '@aws-amplify/ui-react'
+import { Header } from '@cloudscape-design/components'
 import { Amplify } from 'aws-amplify'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -13,10 +14,18 @@ const components = {
   Header() {
     return (
       <View textAlign='center'>
-        <Image
-          alt='Amplify logo'
-          src='https://docs.amplify.aws/assets/logo-dark.svg'
-        />
+        <Header
+          variant='h1'
+          data-landing-header
+          info={
+            <h4 className='font-fancy' style={{ display: 'inline', margin: 0 }}>
+              Marking System
+            </h4>
+          }
+          description='We provide safe and sound transportation services for billions'
+        >
+          <span className='font-fancy'>ArchwayBC</span>
+        </Header>
       </View>
     )
   },
