@@ -10,5 +10,6 @@ type Image @model @auth(rules: [{allow: public}]) {
   itemKey: String!
   marked: Boolean
   category: String
-  box: [Int]!
+  box: [Int]
 }
+ 

@@ -110,7 +110,7 @@ export const schema = {
                     "type": "Int",
                     "isRequired": false,
                     "attributes": [],
-                    "isArrayNullable": false
+                    "isArrayNullable": true
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -157,5 +157,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "cdcd3b184e580d937ba0aaa5b60d0a44"
+    "version": "2e5c0dfb87e2dd7f753de20c3877e7a0"
 };

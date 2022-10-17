@@ -18,7 +18,7 @@
       "function": {
         "S3Trigger2f606387": {
           "deploymentBucketName": "amplify-airbc-dev-110357-deployment",
-          "s3Key": "amplify-builds/S3Trigger2f606387-454f6f6e6a75665a5a58-build.zip"
+          "s3Key": "amplify-builds/S3Trigger2f606387-54325132505338415641-build.zip"
         }
       },
       "api": {

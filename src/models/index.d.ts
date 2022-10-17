@@ -24,7 +24,7 @@ export declare class Image {
   readonly itemKey: string;
   readonly marked?: boolean | null;
   readonly category?: string | null;
-  readonly box: (number | null)[];
+  readonly box?: (number | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<Image, ImageMetaData>);
