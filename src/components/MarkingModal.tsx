@@ -258,7 +258,7 @@ const MarkingModal: React.FC<{
                   <Button onClick={() => setDrawStart(false)}>Cancel</Button>
                 ) : (
                   <Button variant='primary' onClick={() => setDrawStart(true)}>
-                    {imageBoxDefined ? 'Redefined Bounding Box' : 'Draw'}
+                    {imageBoxDefined ? 'Redefine Bounding Box' : 'Draw'}
                   </Button>
                 )}
               </div>
