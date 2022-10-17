@@ -44,7 +44,7 @@ const MarkingModal: React.FC<{
   visible: boolean
   itemData?: IMedia
   refresh: () => void
-}> = ({ isVideo = false, onDismiss, visible, itemData ,refresh}) => {
+}> = ({ isVideo = false, onDismiss, visible, itemData, refresh }) => {
   const refSrcDiv = useRef<HTMLDivElement>(null)
   const refBoxDiv = useRef<HTMLDivElement>(null)
   const [boxStyle, setBoxStyle] = useState<React.CSSProperties>(REC_STYLE_INIT)
@@ -194,7 +194,10 @@ const MarkingModal: React.FC<{
                   if (!orgImg.category && !selectedOption) {
                     return toast.error('Image category not selected')
                   }
-                  if (!orgImg.box && !refBoxDiv.current) {
+                  if (
+                    !imageBoxDefined &&
+                    refBoxDiv.current?.style.display !== 'block'
+                  ) {
                     return toast.error('Image bounding box is not defined')
                   }
                   await updateInstance(orgImg.id, {
