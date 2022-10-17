@@ -14,6 +14,7 @@ import React, { useState } from 'react'
 import useDataStore from './hooks/useDataStore'
 import TabPane from './components/TabPane'
 import MainHeader from './components/MainHeader'
+import { Toaster } from 'react-hot-toast'
 
 const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
   const [marked, setMarked] = useState(false)
@@ -79,6 +80,11 @@ const App: React.FC<{ signOut?: () => void }> = ({ signOut }) => {
           <Tabs tabs={tabs} disableContentPaddings />
         </SpaceBetween>
       </Container>
+      <Toaster
+        position='top-center'
+        reverseOrder={false}
+        toastOptions={{ style: { width: '100%', maxWidth: '500px' } }}
+      />
     </ContentLayout>
   )
 }

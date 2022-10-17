@@ -73,13 +73,16 @@ video {
 .div-marking > .div-marking-helps {
   flex: 1 0 250px;
   border-left: 2px solid silver;
-  padding-left: 24px
+  padding-left: 24px;
 }
 .div-marking .div-marking-inputs .div-marking-inputs-div {
   width: 100%;
   display: flex;
   flex-flow: column;
   gap: 0.5rem;
+}
+.div-marking .div-marking-inputs .div-marking-inputs-div button {
+  text-align: center !important;
 }
 h3,
 h4 {

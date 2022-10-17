@@ -12,4 +12,3 @@ type Image @model @auth(rules: [{allow: public}]) {
   category: String
   box: [Int]!
 }
- 

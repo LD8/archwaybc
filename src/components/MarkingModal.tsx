@@ -11,7 +11,9 @@ import {
   SpaceBetween,
 } from '@cloudscape-design/components'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Image } from '../models'
+import toast from 'react-hot-toast'
+import { useInstanceUpdate } from '../hooks/useDataStore'
+import { Image, Video } from '../models'
 import { coordToMouse, mouseToCoord } from '../utils'
 import S3Video from './S3Video'
 import { IMedia } from './TabPane'
@@ -41,19 +43,56 @@ const MarkingModal: React.FC<{
 }> = ({ isVideo = false, onDismiss, visible, itemData }) => {
   const refSrcDiv = useRef<HTMLDivElement>(null)
   const refBoxDiv = useRef<HTMLDivElement>()
+  const imageBoxDefined = !isVideo && (itemData as Image)?.box?.length === 4
   const refMouse = useRef(
-    !isVideo && (itemData as Image)?.box?.length === 4
+    imageBoxDefined
       ? coordToMouse((itemData as Image).box as IBox)
       : MOUSE_INIT(),
   )
   const [selectedOption, setSelectedOption] = useState<SelectProps.Option>()
+  useEffect(() => {
+    if (itemData?.category) {
+      setSelectedOption({ label: itemData.category, value: itemData.category })
+    }
+  }, [itemData?.category])
+
+  const [recStyle, setRecStyle] = useState({
+    width: 0,
+    height: 0,
+    left: 0,
+    top: 0,
+  })
+  useEffect(() => {
+    if (!isVideo && (itemData as Image)?.box?.length === 4) {
+      // image box already defined -> draw a boxDiv
+      const boxDiv = document.createElement('div')
+      const { startX, startY, endX, endY } = coordToMouse(
+        (itemData as Image).box as IBox,
+      )
+      refBoxDiv.current = boxDiv
+      boxDiv.className = 'rectangle'
+      const xShift = startX - endX
+      const yShift = startY - startY
+      boxDiv.style.width = `${Math.abs(xShift)}px`
+      boxDiv.style.height = `${Math.abs(yShift)}px`
+      boxDiv.style.left = xShift < 0 ? `${endX}px` : `${startX}px`
+      boxDiv.style.top = yShift < 0 ? `${endY}px` : `${startY}px`
+      refSrcDiv.current?.appendChild(boxDiv)
+      // return () => {
+      //   boxDiv.remove()
+      //   refBoxDiv.current = undefined
+      // }
+    }
+  }, [isVideo, itemData])
+
   const [drawStart, setDrawStart] = useState(false)
-  // console.log({
-  //   refMouse: refMouse.current,
-  //   itemData,
-  //   drawStart,
-  //   refBoxDiv: refBoxDiv.current,
-  // })
+  console.log({
+    refMouse: refMouse.current,
+    itemData,
+    drawStart,
+    refBoxDiv: refBoxDiv.current,
+  })
+  const { updating, updateInstance } = useInstanceUpdate(isVideo)
 
   const handleDismiss = useCallback(() => {
     onDismiss()
@@ -116,6 +155,7 @@ const MarkingModal: React.FC<{
         targetDiv.removeEventListener('mousemove', handleMove)
       }
       return () => {
+        targetDiv.style.cursor = 'default'
         targetDiv.removeEventListener('click', handleClick)
         targetDiv.removeEventListener('mousemove', handleMove)
       }
@@ -139,8 +179,30 @@ const MarkingModal: React.FC<{
             </Button>
             <Button
               variant='primary'
-              onClick={() => {
-                alert('submit')
+              loading={updating}
+              onClick={async () => {
+                if (isVideo) {
+                  const orgVid: Video = itemData as Video
+                  if (!orgVid.category && !selectedOption) {
+                    return toast.error('Video category not selected')
+                  }
+                  await updateInstance(orgVid.id, {
+                    category: selectedOption?.value || orgVid.category,
+                  })
+                } else {
+                  // isImage
+                  const orgImg: Image = itemData as Image
+                  if (!orgImg.category && !selectedOption) {
+                    return toast.error('Image category not selected')
+                  }
+                  if (!orgImg.box && !refBoxDiv.current) {
+                    return toast.error('Image bounding box is not defined')
+                  }
+                  await updateInstance(orgImg.id, {
+                    category: selectedOption?.value || orgImg.category,
+                    box: mouseToCoord(refMouse.current),
+                  })
+                }
                 handleDismiss()
               }}
             >
@@ -151,7 +213,9 @@ const MarkingModal: React.FC<{
       }
     >
       <div className='div-marking'>
-        <div ref={refSrcDiv} className='div-marking-src-before' />
+        <div ref={refSrcDiv} className='div-marking-src-before'>
+          <div className='rectangle' style={recStyle} />
+        </div>
         <div className='div-marking-src'>
           {isVideo ? (
             <S3Video videoKey={itemKey.replace(/^public\//, '')} />
@@ -159,6 +223,7 @@ const MarkingModal: React.FC<{
             <AmplifyS3Image imgKey={itemKey.replace(/^public\//, '')} />
           )}
         </div>
+
         <div className='div-marking-inputs'>
           <FormField
             description='Please select from the options'
@@ -184,13 +249,14 @@ const MarkingModal: React.FC<{
                   <Button onClick={() => setDrawStart(false)}>Cancel</Button>
                 ) : (
                   <Button variant='primary' onClick={() => setDrawStart(true)}>
-                    Draw
+                    {imageBoxDefined ? 'Redefined Bounding Box' : 'Draw'}
                   </Button>
                 )}
               </div>
             </FormField>
           )}
         </div>
+
         <div className='div-marking-helps'>
           <Helps />
         </div>
