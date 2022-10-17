@@ -151,6 +151,7 @@ const MarkingModal: React.FC<{
     setSelectedOption(undefined)
     setDrawStart(false)
     refMouse.current = MOUSE_INIT()
+    setBoxStyle(REC_STYLE_INIT)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
