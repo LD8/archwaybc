@@ -241,7 +241,7 @@ const MarkingModal: React.FC<{
         <div className='div-marking-inputs'>
           <FormField
             description='Please select from the options'
-            label={`${isVideo ? 'Video' : 'Image'} Category`}
+            label='Category'
           >
             <Select
               selectedOption={selectedOption || null}
@@ -330,13 +330,21 @@ function Helps() {
           Learn more <Icon name='external' />
         </h3>
         <div>
-          <Link href=''>
+          <Link
+            href='https://docs.aws.amazon.com/'
+            target='_blank'
+            variant='info'
+          >
             <Icon name='file' />
             <span className='space-left'>Documentation</span>
           </Link>
         </div>
         <div>
-          <Link href=''>
+          <Link
+            href='https://aws.amazon.com/contact-us/'
+            target='_blank'
+            variant='info'
+          >
             <Icon name='call' />
             <span className='space-left'>Customer service</span>
           </Link>
