@@ -7,6 +7,7 @@ import {
   Container,
   ContentLayout,
   Header,
+  Icon,
   SpaceBetween,
   Tabs,
 } from '@cloudscape-design/components'
@@ -17,10 +18,11 @@ import MainHeader from './components/MainHeader'
 import TabPane from './components/TabPane'
 import useDataStore from './hooks/useDataStore'
 
-const App: React.FC<{
+export type IAppProps = {
   signOut?: UseAuthenticator['signOut']
   user?: AmplifyUser
-}> = ({ signOut }) => {
+}
+const App: React.FC<IAppProps> = ({ signOut, user }) => {
   const [marked, setMarked] = useState(false)
   const {
     images,
@@ -31,15 +33,18 @@ const App: React.FC<{
     refreshVideos,
   } = useDataStore(marked)
 
-  console.log({ images, videos })
+  // console.log({ images, videos })
 
   const tabs = [
     {
       id: 'image',
       label: (
-        <span>
-          Image Table {images && <Badge color='blue'>{images.length}</Badge>}
-        </span>
+        <div>
+          <Icon name='view-horizontal' />
+          <span className='space-left'>
+            Image Table {images && <Badge color='blue'>{images.length}</Badge>}
+          </span>
+        </div>
       ),
       content: (
         <TabPane
@@ -53,9 +58,12 @@ const App: React.FC<{
     {
       id: 'video',
       label: (
-        <span>
-          Video Table {videos && <Badge color='blue'>{videos.length}</Badge>}
-        </span>
+        <div>
+          <Icon name='microphone' />
+          <span className='space-left'>
+            Video Table {videos && <Badge color='blue'>{videos.length}</Badge>}
+          </span>
+        </div>
       ),
       content: (
         <TabPane
@@ -71,11 +79,11 @@ const App: React.FC<{
 
   return (
     <ContentLayout
-      header={<MainHeader signOut={signOut} />}
+      header={<MainHeader signOut={signOut} user={user} />}
       data-content-layout
     >
       <Container
-      data-main-div
+        data-main-div
         footer={<MainHeader signOut={signOut} />}
         header={
           <Header
@@ -94,7 +102,8 @@ const App: React.FC<{
               onClick={() => setMarked(false)}
               variant={`${marked ? 'normal' : 'primary'}`}
             >
-              To Be Marked
+              <Icon name='status-info' />
+              <span className='space-left'>To Be Marked</span>
             </Button>
             <Button
               data-btn-mark-switch
@@ -102,7 +111,8 @@ const App: React.FC<{
               onClick={() => setMarked(true)}
               variant={`${marked ? 'primary' : 'normal'}`}
             >
-              Already Marked
+              <Icon name='status-positive' />
+              <span className='space-left'>Already Marked</span>
             </Button>
           </SpaceBetween>
           <Tabs tabs={tabs} disableContentPaddings />

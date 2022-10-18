@@ -174,3 +174,7 @@ h4 {
   margin: 0;
   margin-bottom: 8px;
 }
+
+.space-left {
+  padding-left: 8px;
+}

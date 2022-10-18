@@ -167,7 +167,12 @@ const MarkingModal: React.FC<{
   // })
   return (
     <Modal
-      header={`Marking image: ${itemKey}`}
+      header={
+        <div>
+          <Icon name='view-horizontal' size='medium' />
+          <span className='space-left'>Marking image: {itemKey}</span>
+        </div>
+      }
       onDismiss={handleDismiss}
       visible={visible}
       closeAriaLabel='Close modal'
@@ -258,7 +263,19 @@ const MarkingModal: React.FC<{
                   <Button onClick={() => setDrawStart(false)}>Cancel</Button>
                 ) : (
                   <Button variant='primary' onClick={() => setDrawStart(true)}>
-                    {imageBoxDefined ? 'Redefine Bounding Box' : 'Draw'}
+                    {imageBoxDefined ? (
+                      <div>
+                        <Icon name='redo' />
+                        <span className='space-left'>
+                          Redefine Bounding Box
+                        </span>
+                      </div>
+                    ) : (
+                      <div>
+                        <Icon name='edit' />
+                        <span className='space-left'>Draw</span>
+                      </div>
+                    )}
                   </Button>
                 )}
               </div>
@@ -279,12 +296,18 @@ export default MarkingModal
 function Helps() {
   return (
     <div>
-      <h3>Help panel</h3>
+      <h3>
+        <Icon name='status-info' />
+        <span className='space-left'>Help panel</span>
+      </h3>
       <p>
         This is a paragraph with some help information regarding the marking
         system.
       </p>
-      <h3>Bounding box rules</h3>
+      <h3>
+        <Icon name='status-info' />
+        <span className='space-left'>Bounding box rules</span>
+      </h3>
       <dl>
         <dt>
           <em>One box can be drawn</em>
@@ -307,10 +330,16 @@ function Helps() {
           Learn more <Icon name='external' />
         </h3>
         <div>
-          <Link href=''>Documentation</Link>
+          <Link href=''>
+            <Icon name='file' />
+            <span className='space-left'>Documentation</span>
+          </Link>
         </div>
         <div>
-          <Link href=''>Customer service</Link>
+          <Link href=''>
+            <Icon name='call' />
+            <span className='space-left'>Customer service</span>
+          </Link>
         </div>
       </div>
     </div>
